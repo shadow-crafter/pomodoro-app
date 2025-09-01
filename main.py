@@ -8,15 +8,22 @@ def create_window(root: Tk, timer: Timer):
     label: Label = Label(base_frame, text="Hello, world >w<")
     label.pack()
 
+    state_text_var: StringVar = StringVar()
+    state_label: Label = Label(base_frame, textvariable=state_text_var)
+    state_label.pack()
     timer_text_var: StringVar = StringVar()
     timer_label: Label = Label(base_frame, textvariable=timer_text_var)
     timer_label.pack()
 
-    def update_timer_label():
+    def update_labels():
+        if not timer.paused:
+            state_text_var.set(timer.current_state)
+        else:
+            state_text_var.set("paused")
         timer_text_var.set(timer.timer_text)
-        root.after(100, update_timer_label)
+        root.after(100, update_labels)
     
-    update_timer_label()
+    update_labels()
 
     start_button: Button = Button(base_frame, text="Start", command=timer.start_timer)
     start_button.pack()
