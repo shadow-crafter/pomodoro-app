@@ -6,6 +6,7 @@ timer_states = {"tomato": 25, "break": 5, "long_break": 15}
 class Timer:
     current_state = "tomato"
     current_time = -1
+    timer_text = "00:00"
     tomatos = 0
     paused = True
 
@@ -16,7 +17,8 @@ class Timer:
     def update_timer(self) -> None:
         if not self.paused:
             minutes, seconds = divmod(self.current_time, 60)
-            print(f"Time left: {minutes:02d}:{seconds:02d}")
+            self.timer_text = f"Time left: {minutes:02d}:{seconds:02d}"
+            print(self.timer_text)
             self.current_time -= 1
         if self.current_time < 0:
             self.tomatos += 1
@@ -33,7 +35,7 @@ class Timer:
                 self.current_state = "break"
         elif self.current_state == "break" or self.current_state == "long_break":
             self.current_state = "tomato"
-        self.start_timer()
+        self.paused = True
 
     def start_timer(self) -> None:
         if self.paused:
