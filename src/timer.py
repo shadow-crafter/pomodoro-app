@@ -1,7 +1,7 @@
 import time
 import tkinter as tk
 
-timer_states = {"tomato": 25, "break": 5, "long_break": 15}
+timer_states = {"tomato": 5, "break": 5, "long_break": 10}
 
 class Timer:
     current_state = "tomato"
@@ -40,9 +40,9 @@ class Timer:
     def start_timer(self) -> None:
         if self.paused:
             self.paused = False
-        else:
-            self.current_time = timer_states[self.current_state]
-            self.update_timer()
+            if self.current_time < 0:
+                self.current_time = timer_states[self.current_state]
+                self.update_timer()
     
     def pause_timer(self) -> None:
         self.paused = True
