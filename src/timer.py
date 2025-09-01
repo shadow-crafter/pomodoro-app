@@ -11,7 +11,6 @@ class Timer:
 
     def __init__(self, root) -> None:
         self.root: tk.Tk = root
-        self.start_timer()
     
     def update_timer(self) -> None:
         if not self.paused:
