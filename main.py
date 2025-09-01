@@ -11,6 +11,9 @@ def create_window(root: Tk, timer: Timer):
     state_text_var: StringVar = StringVar()
     state_label: Label = Label(base_frame, textvariable=state_text_var)
     state_label.pack()
+    tomatos_text_var: StringVar = StringVar()
+    tomato_label: Label = Label(base_frame, textvariable=tomatos_text_var)
+    tomato_label.pack()
     timer_text_var: StringVar = StringVar()
     timer_label: Label = Label(base_frame, textvariable=timer_text_var)
     timer_label.pack()
@@ -20,6 +23,7 @@ def create_window(root: Tk, timer: Timer):
             state_text_var.set(timer.current_state)
         else:
             state_text_var.set("paused")
+        tomatos_text_var.set(f"Tomatos: {timer.tomatos}")
         timer_text_var.set(timer.timer_text)
         root.after(100, update_labels)
     

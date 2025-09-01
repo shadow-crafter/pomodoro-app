@@ -1,7 +1,6 @@
-import time
 import tkinter as tk
 
-timer_states = {"tomato": 5, "break": 5, "long_break": 10}
+timer_states = {"tomato": 5, "break": 3, "long_break": 10}
 
 class Timer:
     current_state = "tomato"
@@ -18,19 +17,17 @@ class Timer:
         if not self.paused:
             minutes, seconds = divmod(self.current_time, 60)
             self.timer_text = f"Time left: {minutes:02d}:{seconds:02d}"
-            print(self.timer_text)
             self.current_time -= 1
         if self.current_time < 0:
-            self.tomatos += 1
             self.switch_state()
         else:
             self.root.after(1000, self.update_timer)
 
     def switch_state(self) -> None:
         if self.current_state == "tomato":
+            self.tomatos += 1
             if self.tomatos % 4 == 0 and self.tomatos != 0:
                 self.current_state = "long_break"
-                self.tomatos = 0
             else:
                 self.current_state = "break"
         elif self.current_state == "break" or self.current_state == "long_break":
