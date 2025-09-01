@@ -1,5 +1,8 @@
+import ctypes
 from src.timer import Timer
-from tkinter import Tk, Frame, Button, Label, StringVar
+from tkinter import Tk, Frame, Button, Label, StringVar, PhotoImage
+
+appid = u'shadowcrafter.py_pomodoro_app.1.0'
 
 def create_window(root: Tk, timer: Timer):
     base_frame: Frame = Frame(root)
@@ -35,7 +38,11 @@ def create_window(root: Tk, timer: Timer):
     pause_button.pack()
 
 if __name__ == "__main__":
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid) #identifier so icon loads
+
     root: Tk = Tk()
+    root.title("Pomodoro Timer")
+    root.iconphoto(True, PhotoImage(file="imgs/tomato.png"))
     root.geometry('640x320')
 
     timer = Timer(root)
