@@ -1,0 +1,1 @@
+desktop_notifier==6.2.0

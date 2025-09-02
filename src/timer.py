@@ -1,6 +1,18 @@
+import asyncio
+from desktop_notifier import DesktopNotifier, Urgency, DEFAULT_SOUND
+import threading
 import tkinter as tk
 
-timer_states = {"tomato": 5, "break": 3, "long_break": 10}
+#timer_states = {"tomato": 25*60, "break": 5*60, "long_break": 15*60}
+timer_states = {"tomato": 5, "break": 3, "long_break": 10} #for testing
+
+#specific loop for handling notifications
+notification_loop = asyncio.new_event_loop()
+def start_notification_loop():
+    asyncio.set_event_loop(notification_loop)
+    notification_loop.run_forever()
+notification_thread = threading.Thread(target=start_notification_loop, daemon=True)
+notification_thread.start()
 
 class Timer:
     current_state = "tomato"
@@ -12,12 +24,43 @@ class Timer:
     def __init__(self, root) -> None:
         self.root: tk.Tk = root
     
+    async def send_notification(self, notification_message) -> None:
+        notifier = DesktopNotifier(app_name="Pomodoro Timer")
+        await notifier.send(
+            title="Pomodoro App",
+            message=notification_message,
+            urgency=Urgency.Normal,
+            sound=DEFAULT_SOUND
+        )
+    def notify(self, notification_message) -> None: #handles notification thread
+        asyncio.run_coroutine_threadsafe(
+            self.send_notification(notification_message),
+            notification_loop
+        )
+    
+    def update_timer_text(self) -> None:
+        if self.current_time > 0:
+            minutes, seconds = divmod(self.current_time, 60)
+            self.timer_text = f"{minutes:02d}:{seconds:02d}"
+        else:
+            self.timer_text = "00:00"
+    
     def update_timer(self) -> None:
         if not self.paused:
             minutes, seconds = divmod(self.current_time, 60)
-            self.timer_text = f"Time left: {minutes:02d}:{seconds:02d}"
+            self.update_timer_text()
             self.current_time -= 1
         if self.current_time < 0:
+            message = ""
+            if self.current_state == "tomato":
+                message = "Time's up! Time for a break! (￣o￣) . z Z"
+            else:
+                message = "Time's up! Get back to work! ಠ╭╮ಠ"
+            
+            threading.Thread(
+                target=lambda: self.notify(message),
+                daemon=True
+            ).start()
             self.switch_state()
         else:
             self.root.after(1000, self.update_timer)
@@ -32,6 +75,8 @@ class Timer:
         elif self.current_state == "break" or self.current_state == "long_break":
             self.current_state = "tomato"
         self.paused = True
+        self.current_time = -1
+        self.update_timer_text()
 
     def start_timer(self) -> None:
         if self.paused:
@@ -42,7 +87,3 @@ class Timer:
     
     def pause_timer(self) -> None:
         self.paused = True
-    
-    def stop_timer(self) -> None:
-        self.paused = True
-        self.current_time = -1

@@ -22,7 +22,7 @@ def create_window(root: Tk, timer: Timer):
     timer_label.pack()
 
     def update_labels():
-        if not timer.paused:
+        if not timer.paused and not timer.current_time < 0:
             state_text_var.set(timer.current_state)
         else:
             state_text_var.set("paused")
@@ -36,6 +36,8 @@ def create_window(root: Tk, timer: Timer):
     start_button.pack()
     pause_button: Button = Button(base_frame, text="Pause", command=timer.pause_timer)
     pause_button.pack()
+    stop_button: Button = Button(base_frame, text="Stop", command=timer.switch_state)
+    stop_button.pack()
 
 if __name__ == "__main__":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid) #identifier so icon loads
