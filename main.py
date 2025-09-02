@@ -1,12 +1,37 @@
 import ctypes
 from src.timer import Timer
-from tkinter import Tk, Frame, Button, Label, StringVar, PhotoImage
+from tkinter import Tk, Frame, Button, Label, StringVar, PhotoImage, Menu, simpledialog, messagebox
 
 appid = u'shadowcrafter.py_pomodoro_app.1.0'
 
 def create_window(root: Tk, timer: Timer):
     base_frame: Frame = Frame(root)
     base_frame.pack()
+
+    menu_bar: Menu = Menu(base_frame)
+    settings: Menu = Menu(menu_bar, tearoff=0)
+
+    def set_time(paramater):
+        new_time = simpledialog.askinteger(
+            f"Set {paramater} time",
+            f"Enter {paramater} time in minutes:",
+            parent=root,
+            minvalue=1,
+            maxvalue=120)
+    
+    def set_notification():
+        show_notifications = messagebox.askyesno(
+            "Show Notifications",
+            "Enable notifications?"
+            )
+        
+    settings.add_command(label="Set tomato time", command=lambda: set_time("tomato"))
+    settings.add_command(label="Set break time", command=lambda: set_time("break"))
+    settings.add_command(label="Set long break time", command=lambda: set_time("long_break"))
+    settings.add_command(label="Show notifications", command=set_notification)
+    menu_bar.add_cascade(label="settings", menu=settings)
+
+    root.config(menu=menu_bar)
 
     label: Label = Label(base_frame, text="Hello, world >w<")
     label.pack()
