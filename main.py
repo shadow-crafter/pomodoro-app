@@ -22,7 +22,7 @@ def create_window(root: Tk, timer: Timer):
     timer_label.pack()
 
     def update_labels():
-        if not timer.paused and not timer.current_time < 0:
+        if not timer.paused or timer.current_time < 0:
             state_text_var.set(timer.current_state)
         else:
             state_text_var.set("paused")

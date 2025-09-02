@@ -47,7 +47,6 @@ class Timer:
     
     def update_timer(self) -> None:
         if not self.paused:
-            minutes, seconds = divmod(self.current_time, 60)
             self.update_timer_text()
             self.current_time -= 1
         if self.current_time < 0:
