@@ -64,10 +64,11 @@ class Timer:
             else:
                 message = "Time's up! Get back to work! ಠ╭╮ಠ"
             
-            threading.Thread(
-                target=lambda: self.notify(message),
-                daemon=True
-            ).start()
+            if self.settings["show_notifications"] == True:
+                threading.Thread(
+                    target=lambda: self.notify(message),
+                    daemon=True
+                ).start()
             self.switch_state()
         else:
             self.root.after(1000, self.update_timer)

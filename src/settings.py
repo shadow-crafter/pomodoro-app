@@ -21,7 +21,7 @@ def get_settings() -> dict:
         "tomato": config.getint("timer", "tomato"),
         "break": config.getint("timer", "break"),
         "long_break": config.getint("timer", "long_break"),
-        "show_notification": config.getboolean("timer", "show_notifications")
+        "show_notifications": config.getboolean("timer", "show_notifications")
     }
 
     return settings
