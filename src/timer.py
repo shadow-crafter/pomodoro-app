@@ -74,6 +74,9 @@ class Timer:
             self.root.after(1000, self.update_timer)
 
     def switch_state(self) -> None:
+        if self.paused:
+            return
+        
         if self.current_state == "tomato":
             self.tomatos += 1
             if self.tomatos % 4 == 0 and self.tomatos != 0:
@@ -95,3 +98,7 @@ class Timer:
     
     def pause_timer(self) -> None:
         self.paused = True
+    
+    def stop_timer(self) -> None:
+        self.paused = False
+        self.switch_state()

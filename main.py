@@ -66,7 +66,7 @@ def create_window(root: Tk, timer: Timer) -> None:
     start_button.pack()
     pause_button: Button = Button(base_frame, text="Pause", command=timer.pause_timer)
     pause_button.pack()
-    stop_button: Button = Button(base_frame, text="Stop", command=timer.switch_state)
+    stop_button: Button = Button(base_frame, text="Stop", command=timer.stop_timer)
     stop_button.pack()
 
 if __name__ == "__main__":
