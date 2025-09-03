@@ -27,6 +27,8 @@ def get_settings() -> dict:
     return settings
 
 def update_setting(section: str, setting: str, value: str) -> None:
+    if value == None or value == "None":
+        return
     config.set(section, setting, value)
     save_file()
 

@@ -23,7 +23,7 @@ def create_window(root: Tk, timer: Timer) -> None:
         timer.update_timer_settings()
     
     def set_notification() -> None:
-        show_notifications = messagebox.askyesno(
+        show_notifications = messagebox.askyesnocancel(
             "Show Notifications",
             "Enable notifications?"
             )
