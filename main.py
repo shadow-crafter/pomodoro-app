@@ -1,29 +1,34 @@
 import ctypes
+from src.settings import init as settings_init, update_setting
 from src.timer import Timer
 from tkinter import Tk, Frame, Button, Label, StringVar, PhotoImage, Menu, simpledialog, messagebox
 
 appid = u'shadowcrafter.py_pomodoro_app.1.0'
 
-def create_window(root: Tk, timer: Timer):
+def create_window(root: Tk, timer: Timer) -> None:
     base_frame: Frame = Frame(root)
     base_frame.pack()
 
     menu_bar: Menu = Menu(base_frame)
     settings: Menu = Menu(menu_bar, tearoff=0)
 
-    def set_time(paramater):
+    def set_time(paramater: str) -> None:
         new_time = simpledialog.askinteger(
             f"Set {paramater} time",
             f"Enter {paramater} time in minutes:",
             parent=root,
             minvalue=1,
             maxvalue=120)
+        update_setting("timer", paramater, str(new_time))
+        timer.update_timer_settings()
     
-    def set_notification():
+    def set_notification() -> None:
         show_notifications = messagebox.askyesno(
             "Show Notifications",
             "Enable notifications?"
             )
+        update_setting("timer", "show_notifications", str(show_notifications))
+        timer.update_timer_settings()
         
     settings.add_command(label="Set tomato time", command=lambda: set_time("tomato"))
     settings.add_command(label="Set break time", command=lambda: set_time("break"))
@@ -46,7 +51,7 @@ def create_window(root: Tk, timer: Timer):
     timer_label: Label = Label(base_frame, textvariable=timer_text_var)
     timer_label.pack()
 
-    def update_labels():
+    def update_labels() -> None:
         if not timer.paused or timer.current_time < 0:
             state_text_var.set(timer.current_state)
         else:
@@ -66,6 +71,8 @@ def create_window(root: Tk, timer: Timer):
 
 if __name__ == "__main__":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid) #identifier so icon loads
+
+    settings_init()
 
     root: Tk = Tk()
     root.title("Pomodoro Timer")

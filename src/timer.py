@@ -1,10 +1,8 @@
 import asyncio
 from desktop_notifier import DesktopNotifier, Urgency, DEFAULT_SOUND
+from src.settings import get_settings
 import threading
 import tkinter as tk
-
-#timer_states = {"tomato": 25*60, "break": 5*60, "long_break": 15*60}
-timer_states = {"tomato": 5, "break": 3, "long_break": 10} #for testing
 
 #specific loop for handling notifications
 notification_loop = asyncio.new_event_loop()
@@ -15,14 +13,24 @@ notification_thread = threading.Thread(target=start_notification_loop, daemon=Tr
 notification_thread.start()
 
 class Timer:
-    current_state = "tomato"
-    current_time = -1
-    timer_text = "00:00"
-    tomatos = 0
-    paused = True
+    current_state: str = "tomato"
+    current_time: int = -1
+    paused: bool = True
+    settings: dict = {}
+    timer_states: dict = {}
+    timer_text: str = "00:00"
+    tomatos: int = 0
 
     def __init__(self, root) -> None:
         self.root: tk.Tk = root
+        self.update_timer_settings()
+    
+    def update_timer_settings(self) -> None:
+        self.settings = get_settings()
+
+        self.timer_states["tomato"] = self.settings["tomato"] * 60
+        self.timer_states["break"] = self.settings["break"] * 60
+        self.timer_states["long_break"] = self.settings["long_break"] * 60
     
     async def send_notification(self, notification_message) -> None:
         notifier = DesktopNotifier(app_name="Pomodoro Timer")
@@ -81,7 +89,7 @@ class Timer:
         if self.paused:
             self.paused = False
             if self.current_time < 0:
-                self.current_time = timer_states[self.current_state]
+                self.current_time = self.timer_states[self.current_state]
                 self.update_timer()
     
     def pause_timer(self) -> None:
