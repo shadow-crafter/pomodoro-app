@@ -50,10 +50,12 @@ class Timer:
         )
 
     def notify(self, notification_message) -> None: #handles notification thread and sound
-        asyncio.run_coroutine_threadsafe(
-            self.send_notification(notification_message),
-            notification_loop
-        )
+        playsound.playsound(SOUND_PATH)
+        if self.settings["show_notifications"] == True:
+            asyncio.run_coroutine_threadsafe(
+                self.send_notification(notification_message),
+                notification_loop
+            )
     
     def update_timer_text(self) -> None:
         if self.current_time > 0:
@@ -92,12 +94,10 @@ class Timer:
         self.current_time = -1
         self.update_timer_text()
 
-        playsound.playsound(SOUND_PATH)
-        if self.settings["show_notifications"] == True:
-            threading.Thread(
-                target=lambda: self.notify(message),
-                daemon=True
-            ).start()
+        threading.Thread(
+            target=lambda: self.notify(message),
+            daemon=True
+        ).start()
 
     def start_timer(self) -> None:
         if self.paused:
