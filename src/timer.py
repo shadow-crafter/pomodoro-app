@@ -1,5 +1,6 @@
 import asyncio
-from desktop_notifier import DesktopNotifier, Urgency
+from desktop_notifier import DesktopNotifier, Icon
+from pathlib import Path
 import playsound
 from src.settings import get_settings, update_setting
 import threading
@@ -38,11 +39,14 @@ class Timer:
         self.tomatos = self.settings["tomatos_completed"]
     
     async def send_notification(self, notification_message) -> None:
-        notifier = DesktopNotifier(app_name="Pomodoro Timer")
+        notifier = DesktopNotifier(
+            app_name="Pomodoro Timer",
+            app_icon=Icon(Path("imgs/tomato.png").resolve())
+        )
         await notifier.send(
             title="Pomodoro App",
             message=notification_message,
-            urgency=Urgency.Low
+            icon=Icon(Path("imgs/tomato.png").resolve())
         )
 
     def notify(self, notification_message) -> None: #handles notification thread and sound
