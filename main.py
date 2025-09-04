@@ -40,7 +40,7 @@ def create_window(root: Tk, timer: Timer) -> None:
     root.config(menu=menu_bar)
 
     title_frame: Frame = Frame(base_frame)
-    title_frame.pack()
+    title_frame.pack(fill="x", pady=(10, 0))
 
     label: Label = Label(
         title_frame,
@@ -57,11 +57,14 @@ def create_window(root: Tk, timer: Timer) -> None:
     tomato_label.pack()
 
     timer_frame: Frame = Frame(base_frame)
-    timer_frame.place(relx=0.5, rely=0.5, anchor="center")
+    timer_frame.pack(expand=True, fill="both")
+
+    timer_inner_frame: Frame = Frame(timer_frame)
+    timer_inner_frame.place(relx=0.5, rely=0.5, anchor="center")
 
     state_text_var: StringVar = StringVar()
     state_label: Label = Label(
-        timer_frame,
+        timer_inner_frame,
         textvariable=state_text_var,
         font=("Arial", 10, "italic")
     )
@@ -69,7 +72,7 @@ def create_window(root: Tk, timer: Timer) -> None:
 
     timer_text_var: StringVar = StringVar()
     timer_label: Label = Label(
-        timer_frame,
+        timer_inner_frame,
         textvariable=timer_text_var,
         font=("Arial", 24, "bold")
     )
@@ -86,7 +89,7 @@ def create_window(root: Tk, timer: Timer) -> None:
     
     update_labels()
 
-    button_frame: Frame = Frame(root)
+    button_frame: Frame = Frame(base_frame)
     button_frame.pack(pady=10, side="bottom", fill="x")
 
     buttons_inner_frame: Frame = Frame(root)
