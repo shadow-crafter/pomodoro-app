@@ -1,6 +1,6 @@
 import asyncio
 from desktop_notifier import DesktopNotifier, Urgency, DEFAULT_SOUND
-from src.settings import get_settings
+from src.settings import get_settings, update_setting
 import threading
 import tkinter as tk
 
@@ -31,6 +31,8 @@ class Timer:
         self.timer_states["tomato"] = self.settings["tomato"] * 60
         self.timer_states["break"] = self.settings["break"] * 60
         self.timer_states["long_break"] = self.settings["long_break"] * 60
+
+        self.tomatos = self.settings["tomatos_completed"]
     
     async def send_notification(self, notification_message) -> None:
         notifier = DesktopNotifier(app_name="Pomodoro Timer")
@@ -79,6 +81,7 @@ class Timer:
         
         if self.current_state == "tomato":
             self.tomatos += 1
+            update_setting("timer", "tomatos_completed", str(self.tomatos))
             if self.tomatos % 4 == 0 and self.tomatos != 0:
                 self.current_state = "long_break"
             else:

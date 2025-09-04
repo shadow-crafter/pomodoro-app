@@ -10,7 +10,8 @@ def init() -> None:
             "tomato": "25",
             "break": "5",
             "long_break": "15",
-            "show_notifications": "true"
+            "show_notifications": "true",
+            "tomatos_completed": "0"
         }
 
         save_file()
@@ -21,7 +22,8 @@ def get_settings() -> dict:
         "tomato": config.getint("timer", "tomato"),
         "break": config.getint("timer", "break"),
         "long_break": config.getint("timer", "long_break"),
-        "show_notifications": config.getboolean("timer", "show_notifications")
+        "show_notifications": config.getboolean("timer", "show_notifications"),
+        "tomatos_completed": config.getint("timer", "tomatos_completed")
     }
 
     return settings
