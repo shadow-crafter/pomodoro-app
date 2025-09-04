@@ -1,5 +1,5 @@
 import asyncio
-from desktop_notifier import DesktopNotifier, Urgency, DEFAULT_SOUND
+from desktop_notifier import DesktopNotifier, Urgency
 from src.settings import get_settings, update_setting
 import threading
 import tkinter as tk
@@ -39,8 +39,7 @@ class Timer:
         await notifier.send(
             title="Pomodoro App",
             message=notification_message,
-            urgency=Urgency.Normal,
-            sound=DEFAULT_SOUND
+            urgency=Urgency.Low
         )
     def notify(self, notification_message) -> None: #handles notification thread
         asyncio.run_coroutine_threadsafe(
@@ -60,17 +59,6 @@ class Timer:
             self.update_timer_text()
             self.current_time -= 1
         if self.current_time < 0:
-            message = ""
-            if self.current_state == "tomato":
-                message = "Time's up! Time for a break! (￣o￣) . z Z"
-            else:
-                message = "Time's up! Get back to work! ಠ╭╮ಠ"
-            
-            if self.settings["show_notifications"] == True:
-                threading.Thread(
-                    target=lambda: self.notify(message),
-                    daemon=True
-                ).start()
             self.switch_state()
         else:
             self.root.after(1000, self.update_timer)
@@ -78,8 +66,10 @@ class Timer:
     def switch_state(self) -> None:
         if self.paused:
             return
-        
+        message = ""
+
         if self.current_state == "tomato":
+            message = "Time's up! Time for a break! (￣o￣) . z Z"
             self.tomatos += 1
             update_setting("timer", "tomatos_completed", str(self.tomatos))
             if self.tomatos % 4 == 0 and self.tomatos != 0:
@@ -87,10 +77,18 @@ class Timer:
             else:
                 self.current_state = "break"
         elif self.current_state == "break" or self.current_state == "long_break":
+            message = "Time's up! Get back to work! ಠ╭╮ಠ"
             self.current_state = "tomato"
+        
         self.paused = True
         self.current_time = -1
         self.update_timer_text()
+
+        if self.settings["show_notifications"] == True:
+            threading.Thread(
+                target=lambda: self.notify(message),
+                daemon=True
+            ).start()
 
     def start_timer(self) -> None:
         if self.paused:
