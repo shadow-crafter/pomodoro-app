@@ -1,8 +1,11 @@
 import asyncio
 from desktop_notifier import DesktopNotifier, Urgency
+import playsound
 from src.settings import get_settings, update_setting
 import threading
 import tkinter as tk
+
+SOUND_PATH = "sounds/alarm.mp3" #sound used is from https://pixabay.com/sound-effects/timer-terminer-342934/, feel free to modify it
 
 #specific loop for handling notifications
 notification_loop = asyncio.new_event_loop()
@@ -41,7 +44,9 @@ class Timer:
             message=notification_message,
             urgency=Urgency.Low
         )
-    def notify(self, notification_message) -> None: #handles notification thread
+
+    def notify(self, notification_message) -> None: #handles notification thread and sound
+        playsound.playsound(SOUND_PATH)
         asyncio.run_coroutine_threadsafe(
             self.send_notification(notification_message),
             notification_loop
