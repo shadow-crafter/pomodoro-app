@@ -7,7 +7,7 @@ appid = u'shadowcrafter.py_pomodoro_app.1.0'
 
 def create_window(root: Tk, timer: Timer) -> None:
     base_frame: Frame = Frame(root)
-    base_frame.pack()
+    base_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
     menu_bar: Menu = Menu(base_frame)
     settings: Menu = Menu(menu_bar, tearoff=0)
@@ -18,7 +18,8 @@ def create_window(root: Tk, timer: Timer) -> None:
             f"Enter {paramater} time in minutes:",
             parent=root,
             minvalue=1,
-            maxvalue=120)
+            maxvalue=120
+        )
         update_setting("timer", paramater, str(new_time))
         timer.update_timer_settings()
     
@@ -26,7 +27,7 @@ def create_window(root: Tk, timer: Timer) -> None:
         show_notifications = messagebox.askyesnocancel(
             "Show Notifications",
             "Enable notifications?"
-            )
+        )
         update_setting("timer", "show_notifications", str(show_notifications))
         timer.update_timer_settings()
         
@@ -38,36 +39,65 @@ def create_window(root: Tk, timer: Timer) -> None:
 
     root.config(menu=menu_bar)
 
-    label: Label = Label(base_frame, text="Hello, world >w<")
+    title_frame: Frame = Frame(base_frame)
+    title_frame.pack()
+
+    label: Label = Label(
+        title_frame,
+        text="Pomodoro Timer",
+        font=("Arial", 14, "bold")
+    )
     label.pack()
+    tomatos_text_var: StringVar = StringVar()
+    tomato_label: Label = Label(
+        title_frame,
+        textvariable=tomatos_text_var,
+        font=("Arial", 14)
+    )
+    tomato_label.pack()
+
+    timer_frame: Frame = Frame(base_frame)
+    timer_frame.place(relx=0.5, rely=0.5, anchor="center")
 
     state_text_var: StringVar = StringVar()
-    state_label: Label = Label(base_frame, textvariable=state_text_var)
+    state_label: Label = Label(
+        timer_frame,
+        textvariable=state_text_var,
+        font=("Arial", 10, "italic")
+    )
     state_label.pack()
-    tomatos_text_var: StringVar = StringVar()
-    tomato_label: Label = Label(base_frame, textvariable=tomatos_text_var)
-    tomato_label.pack()
+
     timer_text_var: StringVar = StringVar()
-    timer_label: Label = Label(base_frame, textvariable=timer_text_var)
+    timer_label: Label = Label(
+        timer_frame,
+        textvariable=timer_text_var,
+        font=("Arial", 24, "bold")
+    )
     timer_label.pack()
 
     def update_labels() -> None:
         if not timer.paused or timer.current_time < 0:
-            state_text_var.set(timer.current_state)
+            state_text_var.set(f"~{timer.current_state}~")
         else:
-            state_text_var.set("paused")
+            state_text_var.set("~paused~")
         tomatos_text_var.set(f"Tomatos: {timer.tomatos}")
         timer_text_var.set(timer.timer_text)
         root.after(100, update_labels)
     
     update_labels()
 
-    start_button: Button = Button(base_frame, text="Start", command=timer.start_timer)
-    start_button.pack()
-    pause_button: Button = Button(base_frame, text="Pause", command=timer.pause_timer)
-    pause_button.pack()
-    stop_button: Button = Button(base_frame, text="Stop", command=timer.stop_timer)
-    stop_button.pack()
+    button_frame: Frame = Frame(root)
+    button_frame.pack(pady=10, side="bottom", fill="x")
+
+    buttons_inner_frame: Frame = Frame(root)
+    buttons_inner_frame.pack(anchor="center")
+
+    start_button: Button = Button(buttons_inner_frame, text="Start", command=timer.start_timer)
+    start_button.pack(side="left", padx=5)
+    pause_button: Button = Button(buttons_inner_frame, text="Pause", command=timer.pause_timer)
+    pause_button.pack(side="left", padx=5)
+    stop_button: Button = Button(buttons_inner_frame, text="Stop", command=timer.stop_timer)
+    stop_button.pack(side="left", padx=5)
 
 if __name__ == "__main__":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(appid) #identifier so icon loads
