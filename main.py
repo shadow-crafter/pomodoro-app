@@ -84,7 +84,11 @@ def create_window(root: Tk, timer: Timer) -> None:
         else:
             state_text_var.set("~paused~")
         tomatos_text_var.set(f"Tomatos: {timer.tomatos}")
-        timer_text_var.set(timer.timer_text)
+        if timer.current_time >= 0:
+            timer_text_var.set(timer.timer_text)
+        else:
+            minutes, seconds = divmod(timer.timer_states[timer.current_state], 60)
+            timer_text_var.set(f"{minutes:02d}:{seconds:02d}")
         root.after(100, update_labels)
     
     update_labels()
