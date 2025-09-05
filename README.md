@@ -19,6 +19,11 @@ To do this, follow these steps:
 - Now install the dependencies by running `pip install -r requirements.txt`
 - Finally to create the .exe, run `pip install pyinstaller`, then `pyinstaller --onefile --windowed --icon imgs/tomato.ico main.py`
 
+If this command does not work, you may need to specify imports. Use this command instead:
+`pyinstaller --onefile --windowed --icon imgs/tomato.ico --paths src --hidden-import=desktop_notifier --hidden-import=desktop_notifier.resources --hidden-import=playsound  main.py`
+
+After, copy the imgs/ and sounds/ directory into dist. You may also need to include the default config.ini file.
+
 ### From Release
 
 TBA
