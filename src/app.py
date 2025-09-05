@@ -1,6 +1,6 @@
 import ctypes
-from src.settings import init as settings_init, update_setting
-from src.timer import Timer
+from src.settings import update_setting
+from src.pomodoro_timer import Timer
 from tkinter import Tk, Frame, Button, Label, StringVar, PhotoImage, Menu, simpledialog, messagebox
 
 class PomodoroApp:
@@ -10,8 +10,6 @@ class PomodoroApp:
 
     def __init__(self) -> None:
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(self.appid) #identifier so icon loads
-
-        settings_init()
 
         self.root.title("Pomodoro Timer")
         self.root.iconphoto(True, PhotoImage(file="imgs/tomato.png"))
