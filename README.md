@@ -26,7 +26,7 @@ After, copy the imgs/ and sounds/ directory into dist. You may also need to incl
 
 ### From Release
 
-TBA
+Simply download the .zip in the release, and extract and run the .exe. Only works for windows.
 
 ### Updates
 
